@@ -1,5 +1,9 @@
 from flask import Flask
 
+
+HOST = '0.0.0.0'
+PORT = 5000
+
 app = Flask(__name__)
 
 
@@ -9,4 +13,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host=HOST, port=PORT)
