@@ -1,5 +1,6 @@
 from flask import Flask
 
+import models
 
 HOST = '0.0.0.0'
 PORT = 5000
@@ -13,4 +14,5 @@ def hello_world():
 
 
 if __name__ == '__main__':
+    models.initialize()
     app.run(host=HOST, port=PORT)
