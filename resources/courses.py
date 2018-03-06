@@ -1,6 +1,8 @@
 from flask import jsonify, Blueprint
 from flask_restful import Resource, Api, reqparse, inputs
 
+import models
+
 
 class CourseList(Resource):
     def __init__(self):
@@ -26,6 +28,7 @@ class CourseList(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
+        models.Course.create(**args)
         return jsonify({'courses': [{'title': 'Python Basics'}]})
 
 

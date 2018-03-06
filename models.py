@@ -3,7 +3,7 @@ import datetime
 from peewee import *
 
 
-DATABASE = SqliteDatabase('courses.sqlite')
+DATABASE = MySQLDatabase('flaskrestapi', user='root', password='')
 
 
 class Course(Model):
