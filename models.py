@@ -23,10 +23,10 @@ class Form(Model):
     managerPhonenumber = CharField()
     capacityOfAudiences = IntegerField()
     facilities = CharField()
-    requirementsForSpeaker = CharField()
+    requirementsForSpeaker = CharField(default="")
     personalInfoAgreement = BooleanField()
     noVolunteerAgreement = BooleanField()
-    otherFacilities = CharField()
+    otherFacilities = CharField(default="")
     createdAt = DateTimeField(default=datetime.datetime.now)
 
     class Meta:

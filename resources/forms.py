@@ -18,7 +18,6 @@ form_fields = {
     'personalInfoAgreement': fields.Boolean,
     'noVolunteerAgreement': fields.Boolean,
     'otherFacilities': fields.String,
-    'createdAt': fields.datetime,
 }
 
 
@@ -53,6 +52,7 @@ class FormList(Resource):
                 self.reqparse.add_argument(
                     propertyName,
                     required=True,
+                    nullable=False,
                     help='No form {} provided'.format(propertyName),
                     location=['form', 'json']
                 )
@@ -64,10 +64,13 @@ class FormList(Resource):
                    for form in models.Form.select()]
         return jsonify({'courses': courses})
 
+    @marshal_with(form_fields)
     def post(self):
         args = self.reqparse.parse_args()
-        models.Form.create(**args)
-        return jsonify({'courses': [{'title': 'Python Basics'}]})
+        print("args={}".format(args))
+        form = models.Form.create(**args)
+        print("form={}".format(form))
+        return form
 
 
 class Form(Resource):
