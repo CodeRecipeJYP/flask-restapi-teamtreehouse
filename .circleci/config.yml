@@ -40,6 +40,10 @@ jobs:
             wget -O $SSH_KEY_FILENAME $SSH_KEY
             chmod 0400 $SSH_KEY_FILENAME
 
+      -add_ssh_keys:
+        fingerprints:
+          - "41:ca:62:80:a2:d9:76:d2:b4:1f:2d:00:50:9c:f3:51"
+
       - run:
           name: kill previous process
           command: |
