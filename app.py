@@ -3,11 +3,14 @@ from flask import Flask
 import models
 from resources.courses import courses_api
 from resources.reviews import reviews_api
+from flask_cors import CORS
+
 
 HOST = '0.0.0.0'
 PORT = 5000
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(courses_api)
 app.register_blueprint(reviews_api, prefix='/api/v1')
 
