@@ -15,7 +15,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
-    working_directory: ~/flask-restapi-teamtreehouse
+    working_directory: ~
 
     steps:
       - checkout
@@ -30,6 +30,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            cd $AWS_PROJDIR
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
@@ -48,30 +49,45 @@ jobs:
       - run:
           name: kill previous process
           command: |
-            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "if ps -ef | grep -q '[P]ython app.py';
-            then
-              echo 'process found'
-              PID=`ps -ef | grep 'Python app.py' | grep -v 'grep' | awk '{print $2}'` && kill -9 $PID
-            else
-              echo 'process not found'
-            fi"
-
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "
+              if
+                ps -ef | grep -q '[P]ython app.py';
+              then
+                echo 'process found'
+                PID=`ps -ef | grep 'Python app.py' | grep -v 'grep' | awk '{print $2}'` && kill -9 $PID
+              else
+                echo 'process not found'
+              fi"
 
       - run:
           name: delivery artifacts
           command: |
-            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'rm -rf $AWS_WORDIR/$AWS_PROJDIR && mkdir $AWS_PROJDIR'
-            scp -i $SSH_KEY_FILENAME . $AWS_USERNAME@$AWS_HOST:@$AWS_WORDIR/$AWS_PROJDIR
+            AWS_USERNAME=ubuntu
+            AWS_HOST=18.219.223.174
+            AWS_WORKDIR=/home/ubuntu/workspace
+            AWS_PROJDIR=flask-restapi-teamtreehouse
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "
+              cd $AWS_WORKDIR
+              rm -rf $AWS_PROJDIR
+              mkdir $AWS_PROJDIR"
+            # zip -r artifacts.zip $AWS_PROJDIR/*
+            scp -r -i $SSH_KEY_FILENAME $AWS_PROJDIR/* $AWS_USERNAME@$AWS_HOST:$AWS_WORKDIR/$AWS_PROJDIR/
 
       - run:
           name: install dependencies on aws
           command: |
-            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'cd $AWS_WORDIR/$AWS_PROJDIR && python3 -m venv venv && . venv/bin/activate && pip install -r requirements.txt'
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "
+              cd $AWS_WORKDIR/$AWS_PROJDIR &&
+              python3 -m venv venv &&
+              . venv/bin/activate &&
+              pip install -r requirements.txt"
 
       - run:
           name: run server
           command: |
-            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'cd $AWS_WORDIR/$AWS_PROJDIR && python app.py &'
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "
+              cd $AWS_WORKDIR/$AWS_PROJDIR &&
+              python app.py &"
 
       - save_cache:
           paths:
