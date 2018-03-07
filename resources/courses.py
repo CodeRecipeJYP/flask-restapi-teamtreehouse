@@ -1,5 +1,7 @@
 from flask import jsonify, Blueprint
-from flask_restful import Resource, Api, reqparse, inputs, fields
+from flask_restful import (Resource, Api, reqparse,
+                           inputs, fields, marshal,
+                           marshal_with)
 
 import models
 
@@ -31,8 +33,8 @@ class CourseList(Resource):
         super().__init__()
 
     def get(self):
-        courses = models.Course.select()
-        # It raises error. need to be jsonified
+        courses = [marshal(course, course_fields)
+                   for course in models.Course.select()]
         return jsonify({'courses': courses})
 
     def post(self):
