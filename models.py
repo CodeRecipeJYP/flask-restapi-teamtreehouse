@@ -15,6 +15,24 @@ class Course(Model):
         database = DATABASE
 
 
+class Form(Model):
+    libraryName = CharField(unique=True)
+    libraryLocation = CharField()
+    managerName = CharField()
+    managerEmail = CharField()
+    managerPhonenumber = CharField()
+    capacityOfAudiences = IntegerField()
+    facilities = CharField()
+    requirementsForSpeaker = CharField()
+    personalInfoAgreement = BooleanField()
+    noVolunteerAgreement = BooleanField()
+    otherFacilities = CharField()
+    createdAt = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = DATABASE
+
+
 class Review(Model):
     course = ForeignKeyField(Course, related_name='review_set')
     rating = IntegerField()
@@ -27,6 +45,6 @@ class Review(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Course, Review], safe=True)
+    DATABASE.create_tables([Course, Review, Form], safe=True)
     DATABASE.close()
 
