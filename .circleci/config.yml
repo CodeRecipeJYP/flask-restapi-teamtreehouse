@@ -48,10 +48,13 @@ jobs:
       - run:
           name: kill previous process
           command: |
-            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST '
-            if ps -ef | grep -q '[P]ython app.py';
-            then PID=`ps -ef | grep 'Python app.py' | grep -v 'grep' | awk '{print $2}'` && kill -9 $PID
-            else echo previous process not found fi'
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "if ps -ef | grep -q '[P]ython app.py';
+            then
+              echo 'process found'
+              PID=`ps -ef | grep 'Python app.py' | grep -v 'grep' | awk '{print $2}'` && kill -9 $PID
+            else
+              echo 'process not found'
+            fi"
 
 
       - run:
