@@ -39,6 +39,7 @@ jobs:
           command: |
             wget -O $SSH_KEY_FILENAME $SSH_KEY
             chmod 0400 $SSH_KEY_FILENAME
+            ls
 
       - add_ssh_keys:
           fingerprints:
@@ -47,23 +48,25 @@ jobs:
       - run:
           name: kill previous process
           command: |
-            ssh -i somul-$SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'PID=`ps -ef | grep 'Python app.py' | grep -v 'grep' | awk '{print $2}'` && kill -9 $PID'
+            ls
+            ssh -o "StrictHostKeyChecking no" -i somul-$SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'PID=`ps -ef | grep 'Python app.py' | grep -v 'grep' | awk '{print $2}'` && kill -9 $PID'
+
 
       - run:
           name: delivery artifacts
           command: |
-            ssh -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'rm -rf $AWS_WORDIR/$AWS_PROJDIR && mkdir $AWS_PROJDIR'
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'rm -rf $AWS_WORDIR/$AWS_PROJDIR && mkdir $AWS_PROJDIR'
             scp -i $SSH_KEY_FILENAME . $AWS_USERNAME@$AWS_HOST:@$AWS_WORDIR/$AWS_PROJDIR
 
       - run:
           name: install dependencies on aws
           command: |
-            ssh -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'cd $AWS_WORDIR/$AWS_PROJDIR && python3 -m venv venv && . venv/bin/activate && pip install -r requirements.txt'
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'cd $AWS_WORDIR/$AWS_PROJDIR && python3 -m venv venv && . venv/bin/activate && pip install -r requirements.txt'
 
       - run:
           name: run server
           command: |
-            ssh -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'cd $AWS_WORDIR/$AWS_PROJDIR && python app.py &'
+            ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST 'cd $AWS_WORDIR/$AWS_PROJDIR && python app.py &'
 
       - save_cache:
           paths:
