@@ -63,16 +63,14 @@ jobs:
       - run:
           name: delivery artifacts
           command: |
-            AWS_USERNAME=ubuntu
-            AWS_HOST=18.219.223.174
-            AWS_WORKDIR=/home/ubuntu/workspace
-            AWS_PROJDIR=flask-restapi-teamtreehouse
             ssh -o "StrictHostKeyChecking no" -i $SSH_KEY_FILENAME $AWS_USERNAME@$AWS_HOST "
               cd $AWS_WORKDIR
               rm -rf $AWS_PROJDIR
               mkdir $AWS_PROJDIR"
             # zip -r artifacts.zip $AWS_PROJDIR/*
-            scp -r -i $SSH_KEY_FILENAME $AWS_PROJDIR/* $AWS_USERNAME@$AWS_HOST:$AWS_WORKDIR/$AWS_PROJDIR/
+            pwd
+            ls
+            scp -r -i $SSH_KEY_FILENAME * $AWS_USERNAME@$AWS_HOST:$AWS_WORKDIR/$AWS_PROJDIR/
 
       - run:
           name: install dependencies on aws
