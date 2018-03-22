@@ -16,21 +16,21 @@ class Course(Model):
 
 
 class Form(Model):
-    libraryName = CharField(unique=True)
-    libraryLocation = CharField()
-    managerName = CharField()
-    managerEmail = CharField()
-    managerPhonenumber = CharField()
-    capacityOfAudiences = IntegerField()
-    facilities = CharField()
-    requirementsForSpeaker = CharField(default="")
-    personalInfoAgreement = BooleanField()
-    noVolunteerAgreement = BooleanField()
-    otherFacilities = CharField(default="")
-    createdAt = DateTimeField(default=datetime.datetime.now)
+  libraryName = CharField(unique=True)
+  libraryLocation = CharField()
+  managerName = CharField()
+  managerEmail = CharField()
+  managerPhonenumber = CharField()
+  capacityOfAudiences = IntegerField()
+  facilities = CharField()
+  requirementsForSpeaker = CharField(default="")
+  personalInfoAgreement = BooleanField()
+  noVolunteerAgreement = BooleanField()
+  otherFacilities = CharField(default="")
+  createdAt = DateTimeField(default=datetime.datetime.now)
 
-    class Meta:
-        database = DATABASE
+  class Meta:
+    database = DATABASE
 
 
 class Review(Model):
