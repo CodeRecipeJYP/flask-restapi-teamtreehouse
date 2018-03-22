@@ -19,9 +19,9 @@ app.register_blueprint(forms_api, url_prefix='/api/v1')
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+  return 'Hello World!'
 
 
 if __name__ == '__main__':
-    models.initialize()
-    app.run(host=HOST, port=PORT)
+  models.initialize()
+  app.run(host=HOST, port=PORT)
