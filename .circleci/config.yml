@@ -48,7 +48,6 @@ jobs:
       - run:
           name: Run tests
           command: |
-            sudo docker-php-ext-enable xdebug
             ./cc-test-reporter before-build
             ./cc-test-reporter after-build
 
